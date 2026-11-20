@@ -26,15 +26,36 @@
     try { localStorage.setItem(KEY, next); } catch (_) {}
   });
 
-  // ---- Sección activa en la navegación ----
-  var links = [].slice.call(document.querySelectorAll('nav.toc a'));
-  if (links.length && 'IntersectionObserver' in window) {
-    var io = new IntersectionObserver(function (es) {
-      es.forEach(function (e) {
-        if (e.isIntersecting) links.forEach(function (a) { a.classList.toggle('on', a.getAttribute('href') === '#' + e.target.id); });
-      });
-    }, { rootMargin: '-30% 0px -60% 0px' });
-    document.querySelectorAll('main section[id]').forEach(function (s) { io.observe(s); });
+  // ---- Sección activa en la navegación (secciones y subsecciones) ----
+  var links = [].slice.call(document.querySelectorAll('nav.toc a, [data-nav] a'));
+  if (links.length) {
+    var byId = {};
+    links.forEach(function (a) { var id = (a.getAttribute('href') || '').slice(1); if (id) byId[id] = a; });
+    var targets = Object.keys(byId).map(function (id) { return document.getElementById(id); }).filter(Boolean);
+    var ticking = false;
+    function spy() {
+      ticking = false;
+      var offset = 140, cur = null;
+      targets.forEach(function (el) { if (el.getBoundingClientRect().top - offset <= 0) cur = el; });
+      if (!cur) cur = targets[0];
+      var a = byId[cur.id], top = a;
+      var li = a.closest('ul.sub') ? a.closest('ul.sub').parentElement : null;
+      if (li) top = li.querySelector('a');
+      links.forEach(function (l) { l.classList.toggle('on', l === a || l === top); });
+      document.querySelectorAll('[data-nav] li.open').forEach(function (o) { o.classList.remove('open'); });
+      var parentLi = top && top.parentElement;
+      if (parentLi && parentLi.querySelector('ul.sub')) parentLi.classList.add('open');
+      // en móvil, mantener visible la pestaña activa
+      if (top && window.matchMedia('(max-width:960px)').matches) {
+        var bar = top.closest('[data-nav]');
+        if (bar) { var l = top.offsetLeft - bar.offsetLeft, r = l + top.offsetWidth;
+          if (l < bar.scrollLeft + 16) bar.scrollLeft = l - 16;
+          else if (r > bar.scrollLeft + bar.clientWidth - 16) bar.scrollLeft = r - bar.clientWidth + 16; }
+      }
+    }
+    window.addEventListener('scroll', function () { if (!ticking) { ticking = true; requestAnimationFrame(spy); } }, { passive: true });
+    window.addEventListener('resize', spy);
+    spy();
   }
 
   // ---- Gantt: <div class="gantt" data-src="id-del-json"> ----

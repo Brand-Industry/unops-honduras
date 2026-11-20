@@ -172,7 +172,7 @@ a.module:hover{border-color:var(--mid);transform:translateY(-2px)}
 .layout{display:grid;grid-template-columns:288px minmax(0,1fr)}
 .sidebar{position:sticky;top:0;align-self:start;height:100vh;overflow-y:auto;background:var(--surface);border-right:1px solid var(--line);padding:24px 16px 32px;padding-left:max(16px,env(safe-area-inset-left,0px))}
 .stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:4px;background:var(--row);border-radius:12px;padding:16px 8px;text-align:center}
-.stats b{display:block;font-family:var(--f-display);font-weight:600;font-size:22px;color:var(--navy);line-height:1.1;font-variant-numeric:tabular-nums}
+.stats b{display:block;font-family:var(--f-display);font-weight:700;font-size:26px;letter-spacing:-.01em;color:var(--navy);line-height:1.1}
 .stats span{display:block;margin-top:4px;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
 .navgroup{margin-top:26px}
 .navgroup h5{display:flex;justify-content:space-between;margin:0 10px 8px;font:600 11px var(--f-display);letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
@@ -236,3 +236,10 @@ footer .wrap{padding-block:22px;display:flex;flex-wrap:wrap;gap:8px 20px;justify
   .navgroup ul.sub{display:none!important}
   .content section,.content h3[id]{scroll-margin-top:calc(var(--topbar-h) + 64px)}
 }
+
+/* Gantt: fila de reuniones (puntos con fecha) */
+.g-row.meet-row{background:var(--surface)}
+.g-pt{position:absolute;top:38%;width:11px;height:11px;border-radius:50%;background:var(--bg);border:2.5px solid var(--mid);transform:translate(-50%,-50%)}
+.g-pt-l{position:absolute;top:64%;transform:translateX(-50%);font-size:10.5px;font-weight:600;color:var(--navy);white-space:nowrap}
+.meet-row .g-track{min-height:48px}
+.sw.pt{width:10px;height:10px;border-radius:50%;background:var(--bg);border:2.5px solid var(--mid)}

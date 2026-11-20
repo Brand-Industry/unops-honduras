@@ -81,10 +81,15 @@
     h += '</div></div>';
 
     cfg.rows.forEach(function (r) {
-      h += '<div class="g-row"><div class="lbl">' + esc(r.label) + (r.sub ? '<small>' + esc(r.sub) + '</small>' : '') + '</div><div class="g-track">';
+      h += '<div class="g-row' + (r.points ? ' meet-row' : '') + '"><div class="lbl">' + esc(r.label) + (r.sub ? '<small>' + esc(r.sub) + '</small>' : '') + '</div><div class="g-track">';
       (r.bars || []).forEach(function (b) {
         var a = parse(b.from), z = parse(b.to) + DAY;
         h += '<div class="g-bar' + (b.kind ? ' ' + b.kind : '') + '" style="left:' + P(a) + ';width:' + W(a, z) + '" title="' + fmt(a) + ' – ' + fmt(z - DAY) + '"></div>';
+      });
+      (r.points || []).forEach(function (d) {
+        var x = P(parse(d) + DAY / 2);
+        h += '<div class="g-pt" style="left:' + x + '" title="Reunión · ' + fmt(parse(d)) + '"></div>';
+        h += '<div class="g-pt-l" style="left:' + x + '">' + fmt(parse(d)) + '</div>';
       });
       (r.milestones || []).forEach(function (m) {
         var x = (parse(m.date) + DAY - START) / SPAN * 100;
